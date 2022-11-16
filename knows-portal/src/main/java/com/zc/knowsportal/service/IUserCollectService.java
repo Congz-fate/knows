@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ *  服务类(收藏
  * </p>
  *
  * @author zc.com
@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserCollectService extends IService<UserCollect> {
 
+    /**
+     * 根据用户id查询用户收藏数
+     * @param userId
+     * @return
+     */
+    Integer countCollectByUserId(Integer userId);
 }

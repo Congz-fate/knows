@@ -18,8 +18,10 @@
   <script src="../bower_components/popper.js/dist/umd/popper.min.js"></script>
   <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../bower_components/polyfill/dist/polyfill.min.js"></script>
+  <!--404-->
   <script src="../bower_components/summernote/dist/summernote-bs4.js"></script>
   <script src="../bower_components/summernote/dist/lang/summernote-zh-CN.min.js"></script>
+  <!-- -->
   <script src="../bower_components/vue/dist/vue.js"></script>
   <script src="../bower_components/select2/dist/js/select2.min.js"></script>
   <script src="../bower_components/select2/dist/js/i18n/zh-CN.js"></script>
@@ -184,18 +186,6 @@
 <div class="container-fluid" >
   <tags-app id="tagsApp" :tags="tags"></tags-app>
   <!---->
-  <div class="nav font-weight-light">
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>全部</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>Java基础</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>Java OOP</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>Java SE</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>WebServer</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>二进制</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>Web</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>MySQL</small></a>
-    <a href="../tag/tag_question.html" class="nav-item nav-link text-info"><small>Servlet</small></a>
-  </div>
-  <!---->
 </div>
 <form @submit.prevent="createQuestion" >
 <div class="col-8" id="createQuestionApp">
@@ -238,31 +228,7 @@
     </div>
     <div class="col-4 pb-2 ">
       <!--个人信息-->
-      <div class="container-fluid font-weight-light">
-        <div class="card">
-          <h5 class="card-header">陈某</h5>
-          <div class="card-body">
-            <div class="list-inline mb-1 ">
-                <a class="list-inline-item mx-3 my-1 text-center">
-                  <div><strong>10</strong></div>
-                  <div>回答</div>
-                </a>
-                <a class="list-inline-item mx-3 my-1 text-center" href="personal/myQuestion.html">
-                  <div><strong>10</strong></div>
-                  <div>提问</div>
-                </a>
-                <a class="list-inline-item mx-3 my-1 text-center" href="personal/collect.html">
-                  <div><strong>10</strong></div>
-                  <div>收藏</div>
-                </a>
-                <a class="list-inline-item mx-3 my-1 text-center" href="personal/task.html">
-                  <div><strong>10</strong></div>
-                  <div>任务</div>
-                </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <user-app id="userApp" :user="user"></user-app>
       <!--热点数据-->
       <div class="container-fluid bg-light mt-5">
         <h4 class="m-2 p-2 font-weight-light"><i class="fa fa-list" aria-hidden="true"></i> 热点问题</h4>
@@ -508,8 +474,46 @@
 </script>
 </form>
 </body>
+
 <script src="../js/utils.js"></script>
+<script src="../js/createQuestion.js"></script>
+<!--tag 模板-->
 <script src="../js/tags_nav_temp.js"></script>
 <script src="../js/tags_nav.js"></script>
-<script src="../js/createQuestion.js"></script>
+<!--个人信息模板-->
+<script src="../js/user_info_temp.js"></script>
+<script src="../js/user_info.js"></script>
+<!--兼容富文本 编译器上传图片-->
+<script>
+  $(document).ready(function() {
+    $('#summernote').summernote({
+      height: 300,
+      tabsize: 2,
+      lang: 'zh-CN',
+      placeholder: '请输入问题的详细描述...',
+      callbacks:{  // 回调函数的定义,出现特殊操作时运行的指定方法
+        onImageUpload:function(files){
+          //这个方法就是当用户使用选中图片时,自动运行的方法
+          // files就是用户选中的图片,也是数组
+          let file=files[0];
+          let form=new FormData();
+          form.append("imageFile",file);
+          axios({
+            url:"/upload/image",
+            method:"post",
+            data:form
+          }).then(function(response){
+            // 创建一个img标签对象
+            let img=new Image();
+            img.src=response.data;
+            // 将这个图片添加到summernote中
+            $("#summernote").summernote("insertNode",img);
+
+          })
+        }
+      }
+    });
+    $('select').select2({placeholder:'请选择...'});
+  });
+</script>
 </html>

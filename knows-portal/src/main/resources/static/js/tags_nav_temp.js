@@ -1,3 +1,6 @@
+// 引用规范 手动调用
+Vue.use(tagsApp);
+
 Vue.component("tags-app", {
     props: ["tags"],
     template: `
@@ -8,6 +11,5 @@ Vue.component("tags-app", {
         v-for="tag in tags">
       <small v-text="tag.name">Java基础</small>
     </a>
-  </div>
-    `
+  </div>  `
 })

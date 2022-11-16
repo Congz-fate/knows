@@ -15,8 +15,15 @@ import java.util.Map;
  * @since 2022-11-15
  */
 public interface ITagService extends IService<Tag> {
-    // 查询所有标签的业务逻辑层方法
+    /**
+     * 查询所有标签的业务逻辑层方法
+     * @return
+     */
     List<Tag> getTags();
-    // 查询包含所有标签的Map的业务逻辑层方法
+
+    /**
+     * 查询包含所有标签的Map的业务逻辑层方法
+     * @return
+     */
     Map<String,Tag> getTagMap();
 }

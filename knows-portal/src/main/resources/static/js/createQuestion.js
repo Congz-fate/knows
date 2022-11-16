@@ -24,10 +24,11 @@ let createQuestionApp = new Vue({
                 method:'POST',
                 data:form,
             }).then(function(r){
-                console.log(r.data);
-                if(r.status==OK){
+                //console.log(r.data);
+                if(r.data=="ok"){
                     alert(r.data)
-                    //location.href="/index.html";
+                    /*提交表单（问题）后就回跳 学生主页*/
+                    location.href="/index_student.html";
                 }
             })
         },

@@ -3,25 +3,26 @@ package com.zc.knowsportal.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.zc.knowsportal.mapper.UserMapper;
-import com.zc.knowsportal.model.Question;
-import com.zc.knowsportal.mapper.QuestionMapper;
-import com.zc.knowsportal.model.Tag;
-import com.zc.knowsportal.model.User;
+import com.zc.knowsportal.exception.ServiceException;
+import com.zc.knowsportal.mapper.*;
+import com.zc.knowsportal.model.*;
 import com.zc.knowsportal.service.IQuestionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zc.knowsportal.service.ITagService;
+import com.zc.knowsportal.service.IUserService;
+import com.zc.knowsportal.vo.QuestionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * <p>
- *  服务实现类
+ *  服务实现类(问题实现
  * </p>
  *
  * @author zc.com
@@ -35,6 +36,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionTagMapper questionTagMapper;
+    @Autowired
+    private UserQuestionMapper userQuestionMapper;
+    @Autowired
+    private IUserService userService;
+
     @Override
     public PageInfo<Question> getMyQuestions(String username, Integer pageNum, Integer pageSize) {
             User user=userMapper.findUserByUsername(username);
@@ -77,4 +85,81 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 千万别忘了返回!!!!
         return tags;
     }
+
+    @Override
+    public void saveQuestion(QuestionVo questionVo, String username) {
+        //1. 根据用户名查询用户信息
+        User user=userMapper.findUserByUsername(username);
+        //2. 根据用户选择的标签,拼接tag_names数据
+        StringBuilder builder=new StringBuilder();
+        for(String tagName : questionVo.getTagNames()){
+            builder.append(tagName).append(",");
+        }
+        //{"java基础","javaSE","面试题"}
+        //java基础,javaSE,面试题
+        //kjsdflk,
+        //01234567
+        String tagNames=builder
+                .deleteCharAt(builder.length()-1).toString();
+        //3. 执行question的赋值与新增
+        Question question=new Question()
+                .setTitle(questionVo.getTitle())
+                .setContent(questionVo.getContent())
+                .setUserNickName(user.getNickname())
+                .setUserId(user.getId())
+                .setCreatetime(LocalDateTime.now())
+                .setStatus(0)
+                .setPageViews(0)
+                .setPublicStatus(0)
+                .setDeleteStatus(0)
+                .setTagNames(tagNames);
+        int num=questionMapper.insert(question);
+        if(num!=1){
+            throw new ServiceException("数据库忙");
+        }
+        //4. 新增question与tag的关系
+        //  获得包含所有标签的map
+        Map<String,Tag> tagMap=tagService.getTagMap();
+        // 循环遍历用户选中的所有标签
+        for(String tagName : questionVo.getTagNames()){
+            // 根据标签名称获得标签对象
+            Tag t=tagMap.get(tagName);
+            QuestionTag questionTag=new QuestionTag()
+                    .setQuestionId(question.getId())
+                    .setTagId(t.getId());
+            // 执行关系对象的新增
+            num=questionTagMapper.insert(questionTag);
+            if(num!=1){
+                throw new ServiceException("数据库异常");
+            }
+            log.debug("新增了关系:{}",questionTag);
+        }
+
+        //5. 新增question与user(讲师)的关系
+        Map<String,User> teacherMap=userService.getTeacherMap();
+        for(String teacherName: questionVo.getTeacherNicknames()){
+            User teacher=teacherMap.get(teacherName);
+            UserQuestion userQuestion=new UserQuestion()
+                    .setQuestionId(question.getId())
+                    .setUserId(teacher.getId())
+                    .setCreatetime(LocalDateTime.now());
+            num=userQuestionMapper.insert(userQuestion);
+            if(num!=1){
+                throw new ServiceException("数据库异常");
+            }
+            log.debug("新增了关联讲师:{}",userQuestion);
+        }
+    }
+
+    @Override
+    public Integer countQuestionsByUserId(Integer userId) {
+
+        QueryWrapper<Question> query=new QueryWrapper<>();
+        query.eq("user_id",userId);
+        query.eq("delete_status",0);
+        Integer count=questionMapper.selectCount(query);
+        // 千万别忘了返回!!!!!
+        return count;
+    }
+
 }

@@ -8,10 +8,12 @@ import com.zc.knowsportal.model.Permission;
 import com.zc.knowsportal.model.User;
 import com.zc.knowsportal.service.IUserService;
 import com.zc.knowsportal.vo.RegisterVo;
+import com.zc.knowsportal.vo.UserVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @SpringBootTest
@@ -60,6 +62,18 @@ class KnowsPortalApplicationTests {
         registerVo.setNickname("二龙");
         registerVo.setPassword("123123");
         userService.registerStudent(registerVo);
+    }
+
+    @Test
+    public void t(){
+        UserVo userVo = new UserVo();
+        if (!userVo.equals("")){
+            System.out.println("1");
+            System.out.println(userVo.toString());
+        }else {
+            System.out.println("2");
+        }
+
     }
 
 }

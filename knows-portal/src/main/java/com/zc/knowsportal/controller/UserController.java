@@ -3,8 +3,11 @@ package com.zc.knowsportal.controller;
 
 import com.zc.knowsportal.model.User;
 import com.zc.knowsportal.service.IUserService;
+import com.zc.knowsportal.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,7 +24,7 @@ import java.util.List;
  * @since 2022-11-15
  */
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1/users")
 public class UserController {
 
     // 一般用户登录之后,可以访问当前网站的所有资源
@@ -45,5 +48,21 @@ public class UserController {
     public List<User> master(){
         List<User> users=userService.getTeachers();
         return users;
+    }
+
+    @GetMapping("/me")
+    public UserVo me(@AuthenticationPrincipal UserDetails user){
+        UserVo userVo = new UserVo();
+        if (user!=null){
+            UserVo userVo1 = userService.getUserVo(user.getUsername());
+            return userVo1 ;
+        }else {
+            /* 未登录时 初始化*/
+            Integer q = 0 ;
+            Integer c = 0 ;
+            userVo.setQuestions(q);
+            userVo.setCollections(c);
+        }
+        return userVo ;
     }
 }

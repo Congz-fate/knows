@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>文件上载演示</title>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body>
+<form id="demoForm" method="post"
+      enctype="multipart/form-data"
+      action="/upload/image" >
+  <div>
+    <label>上传文件
+      <input id="imageFile" type="file" name="imageFile">
+    </label>
+  </div>
+  <button type="submit">上传文件</button>
+</form>
+<img id="image" src=""  alt="">
+</body>
+<script>
+  //当表单提交时运行的方法
+  $("#demoForm").submit(function(){
+    // 获得用户选中的文件
+    let files=document.getElementById("imageFile").files;
+    // 判断是否选中的文件
+    if(files.length>0){
+      // 从文件数组中获得用户选中的单个文件
+      let file=files[0];
+      //执行文件上传
+      uploadImage(file);
+    }
+
+    // 这个方法返回false表示阻止表单提交
+    return false;
+  })
+
+  function uploadImage(file){
+    // 创建一个表单对象,并将文件保存在这个表单中
+    let form=new FormData();
+    form.append("imageFile",file);
+    axios({
+      url:"/upload/image",
+      method:"post",
+      data:form
+    }).then(function(response){
+      alert(response.data);
+      $("#image").attr("src",response.data);
+    })
+  }
+</script>
+</html>

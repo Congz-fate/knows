@@ -3,27 +3,35 @@ package com.zc.knowsportal.mapper;
 import com.zc.knowsportal.model.Permission;
 import com.zc.knowsportal.model.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zc.knowsportal.model.UserCollect;
+import com.zc.knowsportal.model.UserQuestion;
+import com.zc.knowsportal.vo.UserVo;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
-* <p>
-    *  Mapper 接口
-    * </p>
-*
+* Mapper 接口
 * @author zc.com
 * @since 2022-11-15
 */
-    @Repository
-    public interface UserMapper extends BaseMapper<User> {
+@Repository
+public interface UserMapper extends BaseMapper<User> {
 
-    // 根据用户名查询出用户对象
+    /**
+     * 根据用户名查询出用户对象
+     * @param username
+     * @return
+     */
     @Select("select * from user where username=#{username}")
     User findUserByUsername(String  username);
 
-    // 根据用户id查询所有权限
+    /**
+     * 根据用户id查询所有权限
+     * @param id
+     * @return
+     */
     @Select("SELECT p.id , p.name" +
             " FROM" +
             " user u LEFT JOIN user_role ur" +
@@ -35,4 +43,30 @@ import java.util.List;
             " ON rp.permission_id=p.id" +
             " WHERE u.id=#{id}")
     List<Permission> findUserPermissionsById(Integer id);
-    }
+
+    /**
+     * 根据username查找 UserVo
+     * @param username
+     * @return
+     */
+    @Select("select id,username,nickname from user " +
+            " where username=#{username}")
+    UserVo findUserVoByUsername(String username);
+
+    /**
+     * 问题数 可以根据用户的id查询
+     * @return
+     */
+    @Select("SELECT COUNT(*) FROM question" +
+            "WHERE user_id=#{id}")
+    UserQuestion findQuestionByUserId();
+
+    /**
+     * 收藏数 可以根据用户的id查询
+     * @return
+     */
+    @Select("SELECT COUNT(*) FROM user_collect" +
+            "WHERE user_id=#{id}")
+    UserCollect findCollectByUserId();
+
+}

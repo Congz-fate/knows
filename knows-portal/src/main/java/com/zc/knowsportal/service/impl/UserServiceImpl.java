@@ -11,6 +11,7 @@ import com.zc.knowsportal.model.UserRole;
 import com.zc.knowsportal.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zc.knowsportal.vo.RegisterVo;
+import com.zc.knowsportal.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <p>
- *  服务实现类
+ *  服务实现类（User
  * </p>
  *
  * @author zc.com
@@ -39,6 +40,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private ClassroomMapper classroomMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private QuestionServiceImpl questionService;
+
+    @Autowired
+    private UserCollectServiceImpl userCollectService ;
 
     @Override
     public void registerStudent(RegisterVo registerVo) {
@@ -79,7 +85,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         //8.执行UserRole关系的新增
         UserRole userRole=new UserRole()
-                .setUserId(stu.getId()) //stu的id是新增成功时框架赋值的
+                //stu的id是新增成功时框架赋值的
+                .setUserId(stu.getId())
                 .setRoleId(2);
         num=userRoleMapper.insert(userRole);
         if(num!=1){
@@ -87,7 +94,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
     }
 
-    // 声明包含所有讲师的List缓存和Map缓存对象
+    /**
+     * 声明包含所有讲师的List缓存和Map缓存对象
+     */
     private List<User> teachers=new CopyOnWriteArrayList<>();
     private Map<String,User> teacherMap=new ConcurrentHashMap<>();
 
@@ -118,5 +127,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             getTeachers();
         }
         return teacherMap;
+    }
+
+    @Override
+    public UserVo getUserVo(String username) {
+        // 根据用户名查询UserVo基本信息
+        UserVo userVo=userMapper.findUserVoByUsername(username);
+        // 根据用户id获得用户问题数
+        Integer questions=questionService.countQuestionsByUserId(userVo.getId());
+        // 根据用户id获得用户收藏数
+        Integer collect = userCollectService.countCollectByUserId(userVo.getId());
+        // 将查询出的问题数赋值到userVo
+        userVo.setQuestions(questions);
+        userVo.setCollections(collect);
+        return userVo;
     }
 }
