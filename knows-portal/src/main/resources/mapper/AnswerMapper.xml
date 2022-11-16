@@ -3,7 +3,7 @@
 <mapper namespace="com.zc.knowsportal.mapper.AnswerMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.zc.knowsportal.model.Answer">
+    <resultMap id="AnswerCommentMap" type="com.zc.knowsportal.model.Answer">
         <id column="id" property="id" />
         <result column="content" property="content" />
         <result column="like_count" property="likeCount" />
@@ -12,6 +12,40 @@
         <result column="quest_id" property="questId" />
         <result column="createtime" property="createtime" />
         <result column="accept_status" property="acceptStatus" />
+        <collection property="comments"
+                    ofType="com.zc.knowsportal.model.Comment">
+            <id column="comment_id" property="id" />
+            <result column="comment_user_id" property="userId" />
+            <result column="comment_answer_id" property="answerId" />
+            <result column="comment_user_nick_name"
+                    property="userNickName" />
+            <result column="comment_content" property="content" />
+            <result column="comment_createtime" property="createtime"/>
+        </collection>
     </resultMap>
-
+    <!--
+    select表示标签中是一个查询操作的sql语句
+    id指定对应Mapper接口的方法名
+     -->
+    <select id="findAnswersByQuestionId" resultMap="AnswerCommentMap">
+        SELECT
+            a.id,
+            a.content,
+            a.like_count,
+            a.user_id,
+            a.user_nick_name,
+            a.quest_id,
+            a.createtime,
+            a.accept_status,
+            c.id comment_id,
+            c.user_id comment_user_id,
+            c.user_nick_name comment_user_nick_name,
+            c.answer_id comment_answer_id,
+            c.content comment_content,
+            c.createtime comment_createtime
+        FROM answer a
+                 LEFT join comment c ON c.answer_id=a.id
+        WHERE a.quest_id=#{questionId}
+        ORDER BY a.createtime , c.id
+    </select>
 </mapper>

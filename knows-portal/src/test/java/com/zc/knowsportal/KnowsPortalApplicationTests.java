@@ -1,11 +1,11 @@
 package com.zc.knowsportal;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zc.knowsportal.mapper.AnswerMapper;
 import com.zc.knowsportal.mapper.ClassroomMapper;
+import com.zc.knowsportal.mapper.QuestionMapper;
 import com.zc.knowsportal.mapper.UserMapper;
-import com.zc.knowsportal.model.Classroom;
-import com.zc.knowsportal.model.Permission;
-import com.zc.knowsportal.model.User;
+import com.zc.knowsportal.model.*;
 import com.zc.knowsportal.service.IUserService;
 import com.zc.knowsportal.vo.RegisterVo;
 import com.zc.knowsportal.vo.UserVo;
@@ -76,4 +76,25 @@ class KnowsPortalApplicationTests {
 
     }
 
+    @Autowired
+    QuestionMapper questionMapper;
+    @Test
+    public void run(){
+        List<Question> list=questionMapper
+                .findTeacherQuestion(8);
+        for(Question q: list){
+            System.out.println(q);
+        }
+    }
+
+    @Autowired
+    AnswerMapper answerMapper;
+    @Test
+    public void xml(){
+        List<Answer> list=answerMapper
+                .findAnswersByQuestionId(149);
+        for(Answer answer: list){
+            System.out.println(answer);
+        }
+    }
 }

@@ -1,10 +1,7 @@
 package com.zc.knowsportal.mapper;
 
-import com.zc.knowsportal.model.Permission;
-import com.zc.knowsportal.model.User;
+import com.zc.knowsportal.model.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zc.knowsportal.model.UserCollect;
-import com.zc.knowsportal.model.UserQuestion;
 import com.zc.knowsportal.vo.UserVo;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -68,5 +65,17 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT COUNT(*) FROM user_collect" +
             "WHERE user_id=#{id}")
     UserCollect findCollectByUserId();
+
+    /**
+     * 根据用户id查询所有角色
+     * @param userId
+     * @return
+     */
+    @Select("SELECT r.id,r.name\n" +
+            "FROM user u\n" +
+            "LEFT JOIN user_role ur ON u.id=ur.user_id\n" +
+            "LEFT JOIN role r ON ur.role_id=r.id\n" +
+            "WHERE u.id=#{userId}")
+    List<Role> findUserRolesById(Integer userId);
 
 }

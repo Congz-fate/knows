@@ -2,17 +2,28 @@ package com.zc.knowsportal.mapper;
 
 import com.zc.knowsportal.model.Question;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
-* <p>
-    *  Mapper 接口
-    * </p>
-*
+* mapper 接口（问题
 * @author zc.com
 * @since 2022-11-15
 */
-    @Repository
-    public interface QuestionMapper extends BaseMapper<Question> {
+@Repository
+public interface QuestionMapper extends BaseMapper<Question> {
 
+    /**
+     * 查询当前登录讲师任务列表
+     * @param userId
+     * @return
+     */
+    @Select("SELECT q.* FROM question q" +
+            " LEFT JOIN user_question uq" +
+            " ON uq.question_id=q.id" +
+            " WHERE uq.user_id=#{userId} OR q.user_id=#{userId}"+
+            " ORDER BY createtime desc")
+    List<Question> findTeacherQuestion(Integer userId);
     }

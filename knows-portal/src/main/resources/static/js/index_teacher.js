@@ -14,7 +14,7 @@ let questionsApp = new Vue({
                 pageNum = 1;
             }
             axios({
-                url: '/v1/questions/my',
+                url: '/v1/questions/teacher',
                 method: "GET",
                 params:{
                     pageNum:pageNum

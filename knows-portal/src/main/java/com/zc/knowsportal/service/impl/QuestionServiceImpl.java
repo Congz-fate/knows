@@ -162,4 +162,31 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return count;
     }
 
+    @Override
+    public PageInfo<Question> getTeacherQuestions(String username, Integer pageNum, Integer pageSize) {
+        User user=userMapper.findUserByUsername(username);
+        // 执行分页查询,先设置分页条件
+        PageHelper.startPage(pageNum,pageSize);
+        List<Question> questions=
+                questionMapper.findTeacherQuestion(user.getId());
+        // 遍历当前所有问题,将每个问题的tags集合赋值
+        for(Question q: questions){
+            List<Tag> tags=tagNames2Tags(q.getTagNames());
+            q.setTags(tags);
+        }
+        // 返回PageInfo
+        return new PageInfo<>(questions);
+    }
+
+    @Override
+    public Question getQuestionById(Integer id) {
+        // 根据问题id 查询问题对象
+        Question question=questionMapper.selectById(id);
+        // 根据当前问题的tagNames字符串获得tags集合
+        List<Tag> tags=tagNames2Tags(question.getTagNames());
+        question.setTags(tags);
+        // 千万别忘了返回
+        return question;
+    }
+
 }

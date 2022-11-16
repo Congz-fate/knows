@@ -24,6 +24,8 @@
   <script src="bower_components/select2/dist/js/select2.min.js"></script>
   <script src="bower_components/select2/dist/js/i18n/zh-CN.js"></script>
   <script src="bower_components/vue-select/dist/vue-select.js"></script>
+  <!--支持axios-->
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
 <header class="container-fluid mb-3 bg-light">
@@ -170,18 +172,11 @@
 
 <!--引入标签的导航栏-->
 <div class="container-fluid">
-  <div class="nav font-weight-light">
-    <a href="tag/tag_question.html" class="nav-item nav-link text-info"><small>全部</small></a>
-    <a href="tag/tag_question.html" class="nav-item nav-link text-info"><small>Java基础</small></a>
-    <a href="tag/tag_question.html" class="nav-item nav-link text-info"><small>Java OOP</small></a>
-    <a href="tag/tag_question.html" class="nav-item nav-link text-info"><small>JavaSE</small></a>
-    <a href="tag/tag_question.html" class="nav-item nav-link text-info"><small>WebServer</small></a>
-  </div>
+  <tags-app id="tagsApp" :tags="tags"></tags-app>
 </div>
 <div class="container-fluid bg-light mt-3 mb-1">
   <div class="row">
     <div class="col-sm-12 col-md-8 pb-2 ">
-
       <div class="row">
         <div class="container-fluid">
           <h4 class="border-bottom m-2 p-2 font-weight-light"><i class="fa fa-tasks" aria-hidden="true"></i> 我的任务</h4>
@@ -191,7 +186,8 @@
               抱歉您还没有提问内容， <a href="question/create.html" class="alert-link">您可以点击此处提问</a>，或者点击标签查看其它问答
             </div>
           </div>
-          <div class="media bg-white m-2 p-3" >
+          <div class="media bg-white m-2 p-3"
+            v-for="question in questions">
             <div class="media-body w-50">
               <div class="row">
                 <div class="col-md-12 col-lg-2">
@@ -201,7 +197,10 @@
                 </div>
                 <div class="col-md-12 col-lg-10">
                   <h5 class="mt-0 mb-1 text-truncate">
-                    <a class="text-dark" href="question/detail.html" >
+                    <a class="text-dark"
+                       href="question/detail.html"
+                       v-text="question.title"
+                       :href="'/question/detail_teacher.html?'+question.id">
                       eclipse 如何导入项目？
                     </a>
                   </h5>
@@ -252,31 +251,7 @@
     <!-- / class="col-8"-->
     <div class="col-sm-12 col-md-4  p-2">
       <!--个人信息-->
-      <div class="container-fluid font-weight-light">
-        <div class="card">
-          <h5 class="card-header">陈某</h5>
-          <div class="card-body">
-            <div class="list-inline mb-1 ">
-              <a class="list-inline-item mx-3 my-1 text-center">
-                <div><strong>10</strong></div>
-                <div>回答</div>
-              </a>
-              <a class="list-inline-item mx-3 my-1 text-center" href="personal/myQuestion.html">
-                <div><strong>10</strong></div>
-                <div>提问</div>
-              </a>
-              <a class="list-inline-item mx-3 my-1 text-center" href="personal/collect.html">
-                <div><strong>10</strong></div>
-                <div>收藏</div>
-              </a>
-              <a class="list-inline-item mx-3 my-1 text-center" href="personal/task.html">
-                <div><strong>10</strong></div>
-                <div>任务</div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <user-app id="userApp" :user="user"></user-app>
       <!--热点数据-->
       <div class="container-fluid bg-light mt-5">
         <h4 class="m-2 p-2 font-weight-light"><i class="fa fa-list" aria-hidden="true"></i> 热点问题</h4>
@@ -473,4 +448,13 @@
   </p>
 </footer>
 </body>
+<script src="js/utils.js"></script>
+<!--标签模板-->
+<script src="js/tags_nav_temp.js"></script>
+<script src="js/tags_nav.js"></script>
+<!--个人信息-->
+<script src="js/user_info_temp.js"></script>
+<script src="js/user_info.js"></script>
+<!-- 老师 模板-->
+<script src="js/index_teacher.js"></script>
 </html>

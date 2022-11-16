@@ -47,4 +47,21 @@ public interface IQuestionService extends IService<Question> {
      */
     Integer countQuestionsByUserId(Integer userId);
 
+    /**
+     * 获得讲师任务列表的业务逻辑层方法
+     * @param username
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Question> getTeacherQuestions(String username,
+                                           Integer pageNum,
+                                           Integer pageSize);
+
+    /**
+     * 根据问题id查询问题对象
+     * @param id
+     * @return
+     */
+    Question getQuestionById(Integer id);
 }

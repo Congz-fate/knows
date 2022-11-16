@@ -2,6 +2,7 @@ package com.zc.knowsportal.service.impl;
 
 import com.zc.knowsportal.mapper.UserMapper;
 import com.zc.knowsportal.model.Permission;
+import com.zc.knowsportal.model.Role;
 import com.zc.knowsportal.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,6 +41,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         int i=0;
         for(Permission p : permissions){
             auth[i]=p.getName();
+            i++;
+        }
+        // 按id查询所有角色
+        List<Role> roles=userMapper.findUserRolesById(user.getId());
+        // 因为要将角色名称也保存到auth中,所以auth要扩容
+        auth = Arrays.copyOf(auth,auth.length+roles.size());
+        for(Role r:roles){
+            auth[i]=r.getName();
             i++;
         }
         //5. 根据现有数据构建UserDetails类型对象

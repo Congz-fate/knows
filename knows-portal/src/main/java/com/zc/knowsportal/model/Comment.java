@@ -56,5 +56,11 @@ public class Comment implements Serializable {
     @TableField("createtime")
     private LocalDateTime createtime;
 
+    /**
+     *  用户昵称
+     */
+    @TableField("user_nick_name")
+    private String userNickName;
+
 
 }

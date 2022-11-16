@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * @Author Cong
  * @ClassName SystemController
- * @Description 注册类 |
+ * @Description 系统工具 |
  * //
  * @Date 15/11/2022  下午 7:52
  */
