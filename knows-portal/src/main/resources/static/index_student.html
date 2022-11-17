@@ -195,16 +195,20 @@
                     <h5 class="mt-0 mb-1 text-truncate">
                       <a class="text-dark"
                          href="question/detail.html"
-                         v-text="question.title">
+                         v-text="question.title"
+                         :href="'/question/detail_student.html?'+question.id">
                         eclipse 如何导入项目？
                       </a>
                     </h5>
                   </div>
                 </div>
                 <div class="font-weight-light text-truncate text-wrap text-justify mb-2" style="height: 70px;">
-                  <p v-html="question.content">
+                  <a class="text-dark"
+                     href="question/detail.html"
+                     v-text="question.title"
+                     :href="'/question/detail_student.html?'+question.id">
                     eclipse 如何导入项目？
-                  </p>
+                  </a>
                 </div>
                 <div class="row">
                   <div class="col-12 mt-1 text-info">

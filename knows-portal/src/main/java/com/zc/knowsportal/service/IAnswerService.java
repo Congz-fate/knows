@@ -29,4 +29,12 @@ public interface IAnswerService extends IService<Answer> {
      * @return
      */
     List<Answer> getAnswersByQuestionId(Integer questionId);
+
+    /**
+     * 采纳回答的业务逻辑层(采纳答案业务)
+     * @param answerId
+     * @param username
+     * @return
+     */
+    boolean accept(Integer answerId,String username);
 }

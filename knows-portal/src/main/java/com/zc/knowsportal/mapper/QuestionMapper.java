@@ -2,7 +2,9 @@ package com.zc.knowsportal.mapper;
 
 import com.zc.knowsportal.model.Question;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +28,15 @@ public interface QuestionMapper extends BaseMapper<Question> {
             " WHERE uq.user_id=#{userId} OR q.user_id=#{userId}"+
             " ORDER BY createtime desc")
     List<Question> findTeacherQuestion(Integer userId);
-    }
+
+    /**
+     * 按问题id修改问题的状态
+     * @param questionId
+     * @param status
+     * @return
+     */
+    @Update("update question set status=#{status} " +
+            " where id=#{questionId}")
+    int updateStatus(@Param("questionId") Integer questionId,
+                     @Param("status") Integer status);
+}

@@ -28,6 +28,18 @@ import lombok.experimental.Accessors;
 public class Question implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 已提交\未回复
+     */
+    public static final Integer POSTED=0;
+    /**
+     * 正在采纳\已回复
+     */
+    public static final Integer SOLVING=1;
+    /**
+     * 已采纳\已解决
+     */
+    public static final Integer SOLVED=2;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

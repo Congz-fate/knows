@@ -188,17 +188,10 @@
         <div class="row">
           <div class="col-2 px-0  ">
             <div class="container-fluid ">
-              <div class="row  mt-4 mx-0 px-0" >
-                <a class="btn btn-outline-danger btn-md rounded-lg fa fa-close " style="font-size: x-small">删除</a>
-              </div>
 
               <div class="row mt-4 mx-0 px-0" >
                 <a class="btn btn-outline-primary btn-md rounded-lg fa fa-edit " style="font-size: x-small"
                    href="../question/edit.html">编辑</a>
-              </div>
-              <div class="row mt-4 mx-0 px-0">
-                <a class="btn btn-outline-info btn-md rounded-lg fa fa-pencil " style="font-size: x-small"
-                   href="#writeAnswer">回答</a>
               </div>
               <div class="row mt-4 mx-0 px-0" id="collectApp">
                 <a class="btn btn-outline-secondary btn-md rounded-lg fa fa-star "
@@ -339,8 +332,15 @@
 
                     </ul>
                     <p class="text-left text-dark">
-                      <a class="btn btn-primary mx-2"
-                         href="#">采纳答案</a>
+                      <a class="btn btn-primary mx-2 text-white"
+                         style="cursor: pointer"
+                         onclick="$(this).next().toggle(300)"
+                      >采纳答案</a>
+                      <a class="badge badge-pill badge-success text-white"
+                         style="display:none;cursor: pointer;"
+                         @click="answerSolved(answer.id)">
+                        <i class="fa fa-check"></i>
+                      </a>
                       <a class="btn btn-outline-primary" data-toggle="collapse" href="#collapseExample1"
                          role="button" aria-expanded="false" aria-controls="collapseExample">
                         <i class="fa fa-edit"></i>添加评论
@@ -367,26 +367,6 @@
 
             </div><!--列出所有的答案-end-->
             <!--如果没有回答问题的权限就不显示回答框-->
-            <div class="container-fluid mt-4" id="writeAnswer">
-              <h5 class="text-info mb-2"><i class="fa fa-edit"></i>写答案</h5>
-              <form action="#" method="post" enctype="application/x-www-form-urlencoded"
-                    class="needs-validation" novalidate>
-                <div class="form-group">
-                  <textarea id="summernote" name="content" required ></textarea>
-                  <div class="invalid-feedback">
-                    <h5>回答内容不能为空！</h5>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <p class="text-right">
-                    <button type="submit" class="btn btn-primary">提交回答</button>
-                  </p>
-
-                </div>
-              </form>
-
-            </div>
-
           </div>
 
         </div>

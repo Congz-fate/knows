@@ -63,4 +63,18 @@ public class AnswerController {
                 .getAnswersByQuestionId(id);
         return answers;
     }
+
+    // 采纳回答的控制层方法
+    @GetMapping("/{answerId}/solved")
+    public String solved(
+            @PathVariable Integer answerId,
+            @AuthenticationPrincipal UserDetails user){
+        boolean isSolved=answerService.accept(
+                answerId,user.getUsername());
+        if(isSolved){
+            return "ok";
+        }else{
+            return "fail";
+        }
+    }
 }
