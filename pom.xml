@@ -17,6 +17,7 @@
     <module>knows-portal</module>
     <module>knows-generator</module>
     <module>knows-resource</module>
+    <module>gateway</module>
   </modules>
   <properties>
     <java.version>1.8</java.version>
