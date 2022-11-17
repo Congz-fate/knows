@@ -11,14 +11,27 @@ import com.zc.knowsportal.vo.RegisterVo;
 import com.zc.knowsportal.vo.UserVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.SpringVersion;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @SpringBootTest
 class KnowsPortalApplicationTests {
+    @Test
+    public void getSpringVersion() {
+        /**
+         * 查看本版本
+         */
+        String version = SpringVersion.getVersion();
+        String version1 = SpringBootVersion.getVersion();
+        System.out.println("spring版本"+version);
+        System.out.println("springboot版本"+version1);
 
+    }
     @Test
     void contextLoads() {
     }
